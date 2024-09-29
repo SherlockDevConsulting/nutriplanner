@@ -1,16 +1,25 @@
-# from flask import Flask
-# from config.config import Config
-# #from config.db import db
-# from .routes import init_routes
+import logging
+from flask import Flask
 
-# def create_app():
-#     app = Flask(__name__)
-#     app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config['DEBUG'] = True
+    
+    # Configuration du logger
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s',
+                        handlers=[logging.StreamHandler(), logging.FileHandler('app.log')])
 
-#     # # Initialiser la base de données
-#     # db.init_app(app)
+    # Utiliser le logger
+    logger = logging.getLogger()
+    logger.setLevel(logging.INFO)  # Niveau de log par défaut
 
-#     # Initialiser les routes
-#     init_routes(app)
+    @app.route('/set_log_level/<level>')
+    def set_log_level(level):
+        """Endpoint pour changer dynamiquement le niveau de log."""
+        level = level.upper()
+        if level in ['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']:
+            logger.setLevel(getattr(logging, level))
+            return f"Niveau de log changé à {level}", 200
+        return f"Niveau de log {level} invalide", 400
 
-#     return app
+    return app
