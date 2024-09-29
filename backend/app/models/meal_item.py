@@ -1,0 +1,21 @@
+from .meal_item_meal_association import meal_item_meal_association
+from .base import Base
+from sqlalchemy.orm import mapped_column, Mapped, relationship
+from sqlalchemy import Boolean, Float, Integer, ForeignKey
+from .food import Food
+
+
+class MealItem(Base):
+    __tablename__ = 'meal_items'
+    
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    unit: Mapped[bool] = mapped_column(Boolean)
+    
+    food_id: Mapped[int] = mapped_column(ForeignKey('foods.id'))
+    food: Mapped[Food] = relationship()
+
+    # Relation many-to-many avec Meal
+    meals: Mapped[list["Meal"]] = relationship( # type: ignore
+        secondary=meal_item_meal_association, back_populates="meal_items"
+    )
