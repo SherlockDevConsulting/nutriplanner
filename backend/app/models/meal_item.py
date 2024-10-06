@@ -1,7 +1,7 @@
 from .meal_item_meal_association import meal_item_meal_association
 from .base import Base
 from sqlalchemy.orm import mapped_column, Mapped, relationship
-from sqlalchemy import Boolean, Float, Integer, ForeignKey
+from sqlalchemy import Boolean, Float, Integer, ForeignKey, String
 from .food import Food
 
 
@@ -10,7 +10,8 @@ class MealItem(Base):
     
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
-    unit: Mapped[bool] = mapped_column(Boolean)
+    unit: Mapped[String] = mapped_column(String)
+    note: Mapped[String] = mapped_column(String)
     
     food_id: Mapped[int] = mapped_column(ForeignKey('foods.id'))
     food: Mapped[Food] = relationship()

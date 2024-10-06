@@ -1,34 +1,30 @@
-version: '3.8'
+version: '3.9'
 
 services:
-  backend:
-    build: ./backend
+  db:
+    image: postgres:16
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     volumes:
-      - ./backend:/app
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${REDIRECTION_DB_PORT}:5432"
+  
+  flask:
+    build: ./backend/
+    ports:
+      - "5000:5000"  # Redirection de port pour Flask
     environment:
       - FLASK_ENV=development
-    ports:
-      - "5000:5000"
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+      - DB_HOST=db  # Nom du service de la base de données
+      - DB_PORT=5432
     depends_on:
-      - db
-
-  # frontend:
-  #   build: ./frontend
-  #   volumes:
-  #     - ./frontend:/app
-  #   ports:
-  #     - "3000:3000"
-
-  db:
-    image: postgres:14
-    environment:
-      POSTGRES_USER: nutriplanner
-      POSTGRES_PASSWORD: yourpassword
-      POSTGRES_DB: nutriplanner_dev
-    ports:
-      - "5432:5432"
-    volumes:
-      - db_data:/var/lib/postgresql/data
-
+      - db  # Le service flask dépend de la base de données
 volumes:
-  db_data:
+  db:
+    driver: local
