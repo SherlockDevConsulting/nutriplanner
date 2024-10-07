@@ -7,18 +7,14 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
+    
+    #Init COnfiguration Object in app
     app.config.from_object(Config)
-    app.config['SQLALCHEMY_DATABASE_URI'] = Config.SQLALCHEMY_DATABASE_URI #"postgresql://nutriplanner:pass@localhost:5431/nutriplanner"
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = Config.SQLALCHEMY_TRACK_MODIFICATIONS
-    app.config['DEBUG'] = Config.APP_DEBUG
 
-    
-    
-    # Configuration du logger
+    # Configuration logger
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s: %(message)s',
                         handlers=[logging.StreamHandler(), logging.FileHandler('app.log')])
 
-    # Utiliser le logger
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)  # Niveau de log par defaut
     logger.info("HEYYYYYYYYYYYYYYYY")

@@ -1,0 +1,32 @@
+# Ignorer les dossiers virtuels locaux et les dépendances non nécessaires
+.venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignorer les fichiers de configuration spécifiques à l'IDE/éditeur
+.idea/
+.vscode/
+*.swp
+
+# Ignorer les fichiers de logs
+*.log
+
+# Ignorer les fichiers de test et de build locaux
+tests/
+dist/
+build/
+*.egg-info/
+*.spec
+
+# Ignorer les fichiers temporaires
+*.tmp
+*.bak
+.DS_Store
+*.tar.gz
+*.zip
+
+# Ignorer le fichier .env pour protéger les informations sensibles
+.env
