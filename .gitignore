@@ -164,3 +164,4 @@ nutriplanner.code-workspace
 .scannerwork/.sonar_lock
 .scannerwork/report-task.txt
 backend/app/.scannerwork/report-task.txt
+.vscode/settings.json
