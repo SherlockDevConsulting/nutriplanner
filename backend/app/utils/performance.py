@@ -3,13 +3,13 @@ import functools
 import logging
 
 def measure_performance(func):
-    """Décorateur pour mesurer les performances d'une fonction."""
+    """Decorator to measure time of a function"""
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
         start_time = time.time()
         result = func(*args, **kwargs)
         end_time = time.time()
         execution_time = end_time - start_time
-        logging.info(f"Performance: {func.__name__} exécutée en {execution_time:.4f} secondes.")
+        logging.info(f"Performance: %s{func.__name__} executed in %.4f seconds.", func.__name__, execution_time)
         return result
     return wrapper
