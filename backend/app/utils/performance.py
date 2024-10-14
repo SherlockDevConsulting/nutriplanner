@@ -10,6 +10,6 @@ def measure_performance(func):
         result = func(*args, **kwargs)
         end_time = time.time()
         execution_time = end_time - start_time
-        logging.info(f"Performance: %s{func.__name__} executed in %.4f seconds.", func.__name__, execution_time)
+        logging.info("Performance: %s executed in %.4f seconds.", func.__name__, execution_time)
         return result
     return wrapper
