@@ -32,7 +32,7 @@ class FoodRepository:
             db.session.query(Food).filter_by(id=food_id).first()
         )
 
-    def create_food(self, food: Food) -> None:
+    def create_food(self, food: Food) -> Food:
         """Create Food in database
 
         Args:
@@ -40,18 +40,23 @@ class FoodRepository:
         """
         db.session.add(food)
         db.session.commit()
+        return Food
 
-    def delete_food(self, food_id: int) -> None:
+    def delete_food(self, food_id: int) -> bool:
         """delete food in database
 
         Args:
             food_id (int): the id of food
+         Returns:
+            boolean depends if food exist
         """
         food = db.session.query(Food).filter_by(id=food_id).first()
         if food:
             db.session.delete(food)
             db.session.commit()
+            return True
         else:
             logger.warning(
                 "Impossible to delete Food object because id: %d not found", food_id
             )
+            return False
