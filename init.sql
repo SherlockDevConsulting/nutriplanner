@@ -1,7 +1,7 @@
 -- Création de la table foods
 CREATE TABLE IF NOT EXISTS foods (
     id SERIAL PRIMARY KEY,
-    code VARCHAR(255) NOT NULL,
+    code VARCHAR(255) NOT NULL UNIQUE,
     name VARCHAR(255) NOT NULL,
     brands VARCHAR(255),
     serving_quantity INT,
