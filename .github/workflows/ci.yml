@@ -35,6 +35,14 @@ jobs:
           pylint --rcfile=.pylintrc backend/app
 
       - name: Run tests with coverage
+        env:
+            APP_DEBUG: true
+            DB_USER: username
+            DB_PASSWORD: password
+            DB_HOST: localhost
+            DB_PORT: 5432
+            DB_NAME: test_db
+            SQLALCHEMY_TRACK_MODIFICATIONS: False
         run: |
           coverage run -m pytest --cov-config=.coveragerc --cov=backend/app
           coverage report  # Display in console
