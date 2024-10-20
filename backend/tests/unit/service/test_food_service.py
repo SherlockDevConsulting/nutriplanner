@@ -1,4 +1,5 @@
 # pylint: disable=W0621
+# pylint: disable=C0116
 import pytest
 
 from app.models.food import Food
@@ -41,6 +42,18 @@ def test_fetch_all_foods(mock_food_repository, sample_food):
     assert result[0].name == "Apple"
 
 
+def test_fetch_all_foods_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.get_all_foods.side_effect = RuntimeError()
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(RuntimeError, match=""):
+        service.fetch_all_foods()
+
+
 def test_fetch_food_by_id(mock_food_repository, sample_food):
     """Unit test to get one food by id"""
     # Given
@@ -55,6 +68,18 @@ def test_fetch_food_by_id(mock_food_repository, sample_food):
     assert result.id == 1
     assert result.code == "12345"
     assert result.name == "Apple"
+
+
+def test_fetch_food_by_id_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.get_food_by_id.side_effect = RuntimeError()
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(RuntimeError, match=""):
+        service.fetch_food_by_id(1)
 
 
 def test_fetch_food_with_wrong_id(mock_food_repository):
@@ -74,16 +99,57 @@ def test_fetch_food_with_wrong_id(mock_food_repository):
 def test_create_food(mock_food_repository, sample_food):
     """Unit test to create a food"""
     # Given
+    food_data = {"id": 1, "code": "12345", "name": "Apple"}
+
     configure_mock_repository(mock_food_repository, "create_food", sample_food)
 
     # When
     service = FoodService()
-    result = service.create_food(sample_food)
+    result = service.create_food(food_data)
 
     assert result is sample_food
     assert result.id == 1
     assert result.code == "12345"
     assert result.name == "Apple"
+
+
+def test_fetch_create_food_value_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.create_food.side_effect = ValueError()
+    food_data = {"id": 1, "code": "12345", "name": "Apple"}
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(ValueError, match=""):
+        service.create_food(food_data)
+
+
+def test_fetch_create_food_runtime_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.create_food.side_effect = RuntimeError()
+    food_data = {"id": 1, "code": "12345", "name": "Apple"}
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(RuntimeError, match=""):
+        service.create_food(food_data)
+
+
+def test_fetch_create_food_exception_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.create_food.side_effect = Exception()
+    food_data = {"id": 1, "code": "12345", "name": "Apple"}
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(Exception, match=""):
+        service.create_food(food_data)
 
 
 def test_delete_food_success(mock_food_repository):
@@ -111,3 +177,15 @@ def test_delete_food_fail(mock_food_repository):
         service.delete_food(id_food)
 
     assert str(exc_info.value) == f"Food with id {id_food} not found to delete"
+
+
+def test_fetch_delete_food_runtime_error(mock_food_repository):
+    # Given
+    mock_food_repository.return_value.delete_food.side_effect = RuntimeError()
+
+    # When
+    service = FoodService()
+
+    # Then
+    with pytest.raises(RuntimeError, match=""):
+        service.delete_food(1)
