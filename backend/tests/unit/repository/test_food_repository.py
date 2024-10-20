@@ -106,8 +106,6 @@ def test_create_food(mock_db, sample_food):
     """Unit test to create food in the database"""
 
     # Given
-    food = Food(code="12345", name="Apple")
-
     # When
     repo = FoodRepository()
     repo.create_food(sample_food)
