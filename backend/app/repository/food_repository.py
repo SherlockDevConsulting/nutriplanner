@@ -2,6 +2,7 @@ import logging
 from typing import List
 from app import db
 from app.models.food import Food
+from sqlalchemy.exc import IntegrityError, DatabaseError
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,14 @@ class FoodRepository:
         Returns:
             List[Food]: the list of food elements
         """
-        return db.session.query(Food).all()
+        try:
+            return db.session.query(Food).all()
+        except Exception as e:
+            logger.error("Unexpected error while get all foods: %s", e)
+            db.session.rollback()
+            raise RuntimeError(
+                "An unexpected error occurred while get all foods"
+            ) from e
 
     def get_food_by_id(self, food_id: int) -> Food:
         """Get one food by the id
@@ -28,9 +36,12 @@ class FoodRepository:
         Returns:
             Food: The object food
         """
-        return (
-            db.session.query(Food).filter_by(id=food_id).first()
-        )
+        try:
+            return db.session.query(Food).filter_by(id=food_id).first()
+        except Exception as e:
+            logger.error("Unexpected error while get food by id: %s", e)
+            db.session.rollback()
+            raise RuntimeError("An unexpected error occurred while get one food") from e
 
     def create_food(self, food: Food) -> Food:
         """Create Food in database
@@ -38,9 +49,24 @@ class FoodRepository:
         Args:
             food (Food): Food object
         """
-        db.session.add(food)
-        db.session.commit()
-        return Food
+        try:
+            db.session.add(food)
+            db.session.commit()
+            return food
+        except IntegrityError as e:
+            logger.error("Integrity error while creating food: %s", e.orig)
+            db.session.rollback()
+            raise ValueError("Food with this code already exists.") from e
+        except DatabaseError as e:
+            logger.error("Database error while creating food: %s", e.orig)
+            db.session.rollback()
+            raise RuntimeError("Database error occurred while create food.") from e
+        except Exception as e:
+            logger.error("Unexpected error while create food: %s", e)
+            db.session.rollback()
+            raise RuntimeError(
+                "An unexpected error occurred during food creation."
+            ) from e
 
     def delete_food(self, food_id: int) -> bool:
         """delete food in database
@@ -51,12 +77,22 @@ class FoodRepository:
             boolean depends if food exist
         """
         food = db.session.query(Food).filter_by(id=food_id).first()
-        if food:
-            db.session.delete(food)
-            db.session.commit()
-            return True
-        else:
+        if not food:
             logger.warning(
                 "Impossible to delete Food object because id: %d not found", food_id
             )
             return False
+        try:
+            db.session.delete(food)
+            db.session.commit()
+            return True
+        except DatabaseError as e:
+            logger.error("Database error while deleting food: %s", e.orig)
+            db.session.rollback()
+            raise RuntimeError("Database error occurred during delete food.") from e
+        except Exception as e:
+            logger.error("Unexpected error: %s", e)
+            db.session.rollback()
+            raise RuntimeError(
+                "An unexpected error occurred while deleting food."
+            ) from e
