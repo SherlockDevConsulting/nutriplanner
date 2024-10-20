@@ -1,0 +1,17 @@
+[run]
+# Include all the files, but we will exclude some below
+source = app
+
+[report]
+# Files and directories to exclude from the coverage report
+omit =
+    */__init__.py
+    */models/*
+    */utils/*
+    */tests/*
+    */config/*
+
+# Exclude certain lines of code (e.g., `if __name__ == '__main__'`)
+exclude_lines =
+    pragma: no cover
+    if __name__ == .__main__.:
