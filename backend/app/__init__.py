@@ -1,10 +1,7 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from app.config.config import Config
 from app.config.logging_config import setup_logging
-
-
-db = SQLAlchemy()
+from app.config.db import db
 
 
 def create_app():

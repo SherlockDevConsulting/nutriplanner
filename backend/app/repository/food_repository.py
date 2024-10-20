@@ -1,8 +1,8 @@
 import logging
 from typing import List
-from app import db
-from app.models.food import Food
 from sqlalchemy.exc import IntegrityError, DatabaseError
+from app.models.food import Food
+from app.config.db import db
 
 logger = logging.getLogger(__name__)
 
