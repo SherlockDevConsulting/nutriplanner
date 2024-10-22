@@ -10,6 +10,7 @@ class MealItem(Base):
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     quantity: Mapped[float] = mapped_column(Float, nullable=False)
+    name: Mapped[String] = mapped_column(String, nullable=False)
     unit: Mapped[String] = mapped_column(String)
     note: Mapped[String] = mapped_column(String)
 

@@ -9,8 +9,8 @@ from sqlalchemy.exc import IntegrityError, DatabaseError
 @pytest.fixture
 def mock_db(mocker):
     """Fixture to provide a mocked db"""
-    mock_service = mocker.patch("app.repository.food_repository.db.session")
-    return mock_service
+    mock_db = mocker.patch("app.repository.food_repository.db.session")
+    return mock_db
 
 
 @pytest.fixture
