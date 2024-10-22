@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS foods (
 -- Création de la table meal_items
 CREATE TABLE IF NOT EXISTS meal_items (
     id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL UNIQUE,
     quantity FLOAT NOT NULL,
     unit VARCHAR(50),
     note VARCHAR(255),
@@ -34,7 +35,7 @@ CREATE TABLE IF NOT EXISTS meal_items (
 -- Création de la table meals
 CREATE TABLE IF NOT EXISTS meals (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(255) NOT NULL
+    name VARCHAR(255) NOT NULL UNIQUE
 );
 
 -- Table de relation entre meals et meal_items
